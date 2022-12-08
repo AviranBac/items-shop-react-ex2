@@ -21,7 +21,7 @@ mongoose.connect('mongodb://localhost:27017/aviran', { useNewUrlParser: true })
 
 app.get("/products", async (req, res) => {
     const products = await Product.find({});
-    console.log("Products sent: ", JSON.stringify(products));
+    console.log("Products retrieved from DB:", JSON.stringify(products));
     res.send(products);
 });
 
@@ -29,7 +29,7 @@ app.post("/orders", async (req, res) => {
     const orderToAdd = new Order(req.body);
     const orderInDB = await orderToAdd.save();
 
-    console.log("Saved order: ", JSON.stringify(orderInDB));
+    console.log("Saved order:", JSON.stringify(orderInDB));
     res.send(orderInDB);
 });
 
