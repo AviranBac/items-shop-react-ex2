@@ -1,13 +1,14 @@
 import './App.css';
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import ShopNavbar from "./components/ShopNavbar/ShopNavbar";
-import { useEffect, useState } from "react";
-import { getProducts } from "./services/ProductService";
+import { useState } from "react";
 import Catalogue from "./components/Catalogue/Catalogue";
 import Cart from "./components/Cart/Cart";
+import { useGetProducts } from "./hooks/useGetProduct";
 
 function App() {
-    const [allProducts, setAllProducts] = useState([]);
+    const allProducts = useGetProducts()
+        .map(product => ({ ...product, quantity: 0 }));
     const [cartProducts, setCartProducts] = useState({});
 
     const cartUpdateHandler = (product, quantity) => {
@@ -23,18 +24,7 @@ function App() {
         setCartProducts(updatedCartProducts);
     };
 
-    const resetCartHandler = () => {
-        setCartProducts({});
-    }
-
-    useEffect(() => {
-        getProducts()
-            .then(response => {
-                response = response
-                    .map(product => ({ ...product, quantity: 0 }));
-                setAllProducts(response);
-            });
-    }, []);
+    const resetCartHandler = () => setCartProducts({});
 
     return (
         <BrowserRouter>

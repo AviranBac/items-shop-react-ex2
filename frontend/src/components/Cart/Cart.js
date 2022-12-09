@@ -1,12 +1,13 @@
 import { Button, Col, Form, Table } from "react-bootstrap";
 import { useState } from "react";
-import { postOrder } from "../../services/OrderService";
+import { usePostOrder } from "../../hooks/usePostOrder";
 
 const Cart = (props) => {
     const { cartProducts } = props;
     const [ firstName, setFirstName ] = useState('');
     const [ lastName, setLastName ] = useState('');
     const [ validated, setValidated ] = useState(false);
+    const { createOrder } = usePostOrder();
 
     const totalPrice = Object.values(cartProducts).reduce((acc, currProduct) =>
         acc + currProduct.price * currProduct.quantity
@@ -15,17 +16,20 @@ const Cart = (props) => {
     const onFirstNameChangeHandler = (event) => setFirstName(event.target.value);
     const onLastNameChangeHandler = (event) => setLastName(event.target.value);
     const onSubmitHandler = (event) => {
+        event.preventDefault();
+        setValidated(true);
+
         const form = event.currentTarget;
 
-        if (form.checkValidity() === false) {
-            event.preventDefault();
-            event.stopPropagation();
-        } else {
-            postOrder(firstName, lastName, totalPrice, Object.values(cartProducts))
-                .then(() => props.onCartPurchase());
+        if (form.checkValidity()) {
+            createOrder(firstName, lastName, totalPrice, Object.values(cartProducts))
+                .then(() => {
+                    props.onCartPurchase();
+                    setFirstName('');
+                    setLastName('');
+                    setValidated(false);
+                });
         }
-
-        setValidated(true);
     }
 
     return (
@@ -40,6 +44,7 @@ const Cart = (props) => {
                     <Form.Control type="text"
                                   placeholder="First Name"
                                   required
+                                  value={firstName}
                                   onChange={onFirstNameChangeHandler} />
                     <Form.Control.Feedback type="invalid">
                         Please provide a valid first name.
@@ -49,6 +54,7 @@ const Cart = (props) => {
                     <Form.Control type="text"
                                   placeholder="Last Name"
                                   required
+                                  value={lastName}
                                   onChange={onLastNameChangeHandler} />
                     <Form.Control.Feedback type="invalid">
                         Please provide a valid last name.
