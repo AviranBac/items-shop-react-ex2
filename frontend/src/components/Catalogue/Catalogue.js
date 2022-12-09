@@ -8,11 +8,11 @@ const Catalogue = (props) => {
         <div>
             <h1 className="title">Catalogue</h1>
 
-            <CardGroup className="row row-cols-1 row-cols-md-3">
+            <CardGroup className="row row-cols-1 row-cols-md-3 w-75 m-auto">
                 {products.map(product => (
                     <div key={product._id} className="col mb-5">
-                        <Card className="product-card">
-                            <Card.Img variant="top" className="product-img" src={product.imageUrl} />
+                        <Card className="product-card text-center h-100">
+                            <Card.Img variant="top" className="product-img m-auto" src={product.imageUrl} />
                             <Card.Body>
                                 <Card.Title>{product.name}</Card.Title>
                                 <Card.Text>{product.description}</Card.Text>
@@ -24,6 +24,7 @@ const Catalogue = (props) => {
                                 <span className="text-muted d-flex flex-row w-100">
                                     <span className="m-auto w-100">Currently in Cart:</span>
                                     <Form.Control type="number"
+                                                  className="text-center"
                                                   min={0}
                                                   defaultValue={cartProducts[product._id]?.quantity || 0}
                                                   onChange={(event) => props.onCartUpdate(product, +event.target.value)} />

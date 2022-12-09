@@ -1,29 +1,8 @@
-.title {
-    text-align: center;
-    text-decoration: underline;
-    margin-bottom: 3rem;
-}
-
-.row.card-group {
-    width: 80%;
-    margin: auto;
-}
-
-.card.product-card {
-    height: 100%;
-    text-align: center;
-}
-
 .card-img-top.product-img {
     width: 200px;
     height: 250px;
-    margin: auto;
 }
 
 .card-footer > * {
     margin: auto;
-}
-
-input {
-    text-align: center;
 }
