@@ -1,5 +1,6 @@
 import { Button, Col, Form, Table } from "react-bootstrap";
 import { useState } from "react";
+import { postOrder } from "../../services/OrderService";
 
 const Cart = (props) => {
     const { cartProducts } = props;
@@ -20,8 +21,8 @@ const Cart = (props) => {
             event.preventDefault();
             event.stopPropagation();
         } else {
-            // TODO: send POST request
-            props.onCartPurchase();
+            postOrder(firstName, lastName, totalPrice, Object.values(cartProducts))
+                .then(() => props.onCartPurchase());
         }
 
         setValidated(true);
@@ -78,7 +79,10 @@ const Cart = (props) => {
                     </tbody>
                 </Table>
 
-                <Button type="submit" variant="primary" className="m-auto">Purchase</Button>
+                <Button type="submit"
+                        variant="primary"
+                        disabled={Object.keys(cartProducts).length === 0}
+                        className="m-auto">Purchase</Button>
             </Form>
         </div>
     );
