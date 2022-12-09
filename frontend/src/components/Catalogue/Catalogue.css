@@ -1,0 +1,8 @@
+.card-img-top.product-img {
+    width: 200px;
+    height: 250px;
+}
+
+.card-footer > * {
+    margin: auto;
+}
