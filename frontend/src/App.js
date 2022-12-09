@@ -4,6 +4,7 @@ import ShopNavbar from "./components/ShopNavbar/ShopNavbar";
 import { useEffect, useState } from "react";
 import { getProducts } from "./services/ProductService";
 import Catalogue from "./components/Catalogue/Catalogue";
+import Cart from "./components/Cart/Cart";
 
 function App() {
     const [allProducts, setAllProducts] = useState([]);
@@ -22,6 +23,10 @@ function App() {
         setCartProducts(updatedCartProducts);
     };
 
+    const resetCartHandler = () => {
+        setCartProducts({});
+    }
+
     useEffect(() => {
         getProducts()
             .then(response => {
@@ -36,7 +41,7 @@ function App() {
             <ShopNavbar />
             <Routes>
                 <Route path="/" element={<Catalogue products={allProducts} cartProducts={cartProducts} onCartUpdate={cartUpdateHandler} />} />
-                <Route path="/cart" element={<></>} />
+                <Route path="/cart" element={<Cart cartProducts={cartProducts} onCartPurchase={resetCartHandler} />} />
                 <Route path="*" element={<Navigate to='/' />} />
             </Routes>
         </BrowserRouter>
