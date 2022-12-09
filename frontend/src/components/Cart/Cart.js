@@ -1,12 +1,12 @@
 import { Button, Col, Form, Table } from "react-bootstrap";
-import { useState } from "react";
-import { postOrder } from "../../services/OrderService";
+import { useEffect, useState } from "react";
 
 const Cart = (props) => {
     const { cartProducts } = props;
     const [ firstName, setFirstName ] = useState('');
     const [ lastName, setLastName ] = useState('');
     const [ validated, setValidated ] = useState(false);
+    const [ shouldPostOrder, setShouldPostOrder ] = useState(false);
 
     const totalPrice = Object.values(cartProducts).reduce((acc, currProduct) =>
         acc + currProduct.price * currProduct.quantity
@@ -21,12 +21,34 @@ const Cart = (props) => {
             event.preventDefault();
             event.stopPropagation();
         } else {
-            postOrder(firstName, lastName, totalPrice, Object.values(cartProducts))
-                .then(() => props.onCartPurchase());
+            setShouldPostOrder(true);
         }
 
         setValidated(true);
     }
+
+    useEffect(() => {
+        if (shouldPostOrder) {
+            const order = {
+                firstName,
+                lastName,
+                totalPrice,
+                products: Object.values(cartProducts)
+            };
+
+            const requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(order)
+            };
+
+            fetch("http://localhost:8080/orders", requestOptions)
+                .then(() => props.onCartPurchase())
+                .catch(console.error);
+
+            setShouldPostOrder(false);
+        }
+    }, [shouldPostOrder]);
 
     return (
         <div>

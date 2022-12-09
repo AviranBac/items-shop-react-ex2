@@ -2,7 +2,6 @@ import './App.css';
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import ShopNavbar from "./components/ShopNavbar/ShopNavbar";
 import { useEffect, useState } from "react";
-import { getProducts } from "./services/ProductService";
 import Catalogue from "./components/Catalogue/Catalogue";
 import Cart from "./components/Cart/Cart";
 
@@ -28,12 +27,14 @@ function App() {
     }
 
     useEffect(() => {
-        getProducts()
-            .then(response => {
-                response = response
+        fetch("http://localhost:8080/products")
+            .then(data => data.json())
+            .then(data => {
+                const productsWithInitialQuantity = data
                     .map(product => ({ ...product, quantity: 0 }));
-                setAllProducts(response);
-            });
+                setAllProducts(productsWithInitialQuantity);
+            })
+            .catch(console.error);
     }, []);
 
     return (
